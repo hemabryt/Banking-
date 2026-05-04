@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Money • FinBank</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="app-body slide-in-right">
+
+  <header class="app-header">
+    <button onclick="history.back()" class="icon-btn"><i class="fas fa-arrow-left"></i></button>
+    <h2>Send Money</h2>
+    <div></div>
+  </header>
+
+  <main class="main-scroll">
+    <form id="sendForm" class="transfer-form">
+      <div class="input-group">
+        <i class="fas fa-user-circle"></i>
+        <input type="text" id="recipientAccount" placeholder="Recipient account number" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-naira-sign"></i>
+        <input type="number" id="amount" placeholder="Amount (₦)" min="1" required>
+      </div>
+      <p class="fee-hint">+ ₦0.00 transaction fee</p>
+      <button type="submit" class="btn-primary btn-block">Continue</button>
+    </form>
+  </main>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content review-modal">
+      <h3>🔒 Secure Transfer</h3>
+      <div class="review-details">
+        <div><span>Recipient</span><strong id="confirmRecipient"></strong></div>
+        <div><span>Amount</span><strong id="confirmAmount"></strong></div>
+        <div><span>Fee</span><strong>₦0.00</strong></div>
+      </div>
+
+      <div class="pin-section">
+        <label>Enter 4‑digit Transaction PIN</label>
+        <div class="pin-input-group">
+          <input type="tel" id="pinDigit1" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" class="pin-digit">
+          <input type="tel" id="pinDigit2" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" class="pin-digit">
+          <input type="tel" id="pinDigit3" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" class="pin-digit">
+          <input type="tel" id="pinDigit4" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" class="pin-digit">
+        </div>
+        <p class="pin-error" id="pinError"></p>
+      </div>
+
+      <div class="review-actions">
+        <button id="cancelTransfer" class="btn-secondary">Cancel</button>
+        <button id="confirmTransfer" class="btn-primary" disabled>Send Money</button>
+      </div>
+      <p class="throttle-msg" id="throttleMsg" style="display:none;">Too many attempts. Please wait 30s.</p>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="send.html" class="nav-item active"><i class="fas fa-paper-plane"></i><span>Send</span></a>
+    <a href="bills.html" class="nav-item"><i class="fas fa-file-invoice-dollar"></i><span>Pay</span></a>
+    <a href="#" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+  </nav>
+
+  <script src="js/bankingService.js"></script>
+  <script src="js/send.js"></script>
+</body>
+</html>
