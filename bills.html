@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay Bills • FinBank</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="app-body slide-in-right">
+
+  <header class="app-header">
+    <button onclick="history.back()" class="icon-btn"><i class="fas fa-arrow-left"></i></button>
+    <h2>Pay Bills</h2>
+    <div></div>
+  </header>
+
+  <main class="main-scroll">
+    <div class="bills-categories">
+      <button class="bill-cat active" data-type="airtime"><i class="fas fa-mobile-alt"></i> Airtime</button>
+      <button class="bill-cat" data-type="data"><i class="fas fa-wifi"></i> Data</button>
+      <button class="bill-cat" data-type="electricity"><i class="fas fa-bolt"></i> Electricity</button>
+    </div>
+
+    <form id="billsForm" class="bills-form">
+      <div class="input-group">
+        <i class="fas fa-phone"></i>
+        <input type="text" id="billerAccount" placeholder="Phone number / meter number" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-naira-sign"></i>
+        <input type="number" id="billAmount" placeholder="Amount (₦)" min="1" required>
+      </div>
+      <button type="submit" class="btn-primary btn-block">Pay</button>
+    </form>
+
+    <div class="bills-history">
+      <h4>Recent Bill Payments</h4>
+      <div id="billsTransactionList"></div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="send.html" class="nav-item"><i class="fas fa-paper-plane"></i><span>Send</span></a>
+    <a href="bills.html" class="nav-item active"><i class="fas fa-file-invoice-dollar"></i><span>Pay</span></a>
+    <a href="#" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+  </nav>
+
+  <script src="js/bankingService.js"></script>
+  <script src="js/bills.js"></script>
+</body>
+</html>
