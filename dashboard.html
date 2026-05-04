@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard • FinBank</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+</head>
+<body class="app-body">
+
+  <!-- Top Bar -->
+  <header class="app-header">
+    <div class="profile-info">
+      <div class="avatar"><i class="fas fa-user-circle"></i></div>
+      <div>
+        <span class="greeting">Hi, <strong id="userName"> </strong></span>
+        <small>Welcome back</small>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="notificationBell" class="icon-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+      <button onclick="logout()" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </header>
+
+  <!-- Notification Dropdown -->
+  <div id="notificationPanel" class="notification-dropdown" style="display:none;">
+    <div class="panel-header">
+      <h3>Notifications</h3>
+      <button class="icon-btn" id="closeNotifications"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="notification-list">
+      <div class="notification-item"><i class="fas fa-check-circle success"></i><span>Login from new device</span><small>2 min ago</small></div>
+      <div class="notification-item"><i class="fas fa-gift warning"></i><span>Cashback reward added</span><small>1 hour ago</small></div>
+      <div class="notification-item"><i class="fas fa-info-circle"></i><span>Transaction limit update</span><small>Yesterday</small></div>
+    </div>
+  </div>
+
+  <!-- Main Scroll Area -->
+  <main class="main-scroll">
+    <!-- Skeleton Loaders -->
+    <div class="skeleton-wrapper" id="balanceSkeleton">
+      <div class="skeleton shimmer balance-card-skeleton"></div>
+    </div>
+
+    <section class="balance-card" id="balanceCard" style="display:none;">
+      <div class="balance-header">
+        <span class="label">Available Balance</span>
+        <i class="fas fa-eye-slash toggle-balance" id="toggleBalance" onclick="togglePrivacy()"></i>
+      </div>
+      <h1 class="balance-amount" id="balance">₦0.00</h1>
+      <div class="sparkline-container">
+        <svg id="sparkline" viewBox="0 0 100 30" class="sparkline-svg"></svg>
+      </div>
+      <div class="account-row">
+        <span class="acct-label">Account number</span>
+        <span class="acct-number" id="accountNumber">*********</span>
+        <button class="copy-btn" onclick="copyAccount()"><i class="fas fa-copy"></i></button>
+      </div>
+      <div class="card-actions">
+        <button class="card-btn" onclick="fundAccount()"><i class="fas fa-plus-circle"></i> Add Money</button>
+        <button class="card-btn" onclick="location.href='send.html'"><i class="fas fa-paper-plane"></i> Send</button>
+        <button class="card-btn" onclick="location.href='bills.html'"><i class="fas fa-file-invoice-dollar"></i> Pay Bills</button>
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <button onclick="location.href='send.html'" class="action-item"><i class="fas fa-arrow-up"></i><span>Send</span></button>
+      <button onclick="fundAccount()" class="action-item"><i class="fas fa-wallet"></i><span>Fund</span></button>
+      <button onclick="location.href='bills.html'" class="action-item"><i class="fas fa-bolt"></i><span>Bills</span></button>
+      <button class="action-item" onclick="showQR()"><i class="fas fa-qrcode"></i><span>My QR</span></button>
+      <button class="action-item disabled"><i class="fas fa-chart-pie"></i><span>Spend</span></button>
+      <button class="action-item disabled"><i class="fas fa-ellipsis-h"></i><span>More</span></button>
+    </section>
+
+    <!-- Spending Insights -->
+    <section class="insights" id="insightsSection" style="display:none;">
+      <div class="section-title">
+        <h3>Spending Insights</h3>
+        <span class="period">This month</span>
+      </div>
+      <div class="insights-inner">
+        <div class="donut-chart" id="donutChart">
+          <svg viewBox="0 0 100 100" class="donut-svg">
+            <circle cx="50" cy="50" r="40" fill="none" stroke-width="20" />
+          </svg>
+          <div class="donut-center">Total<br>₦<span id="totalSpent">0</span></div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <div class="txn-search" id="txnSearchContainer" style="display:none;">
+      <i class="fas fa-search"></i>
+      <input type="text" id="transactionSearch" placeholder="Search transactions..." oninput="filterTransactions()">
+    </div>
+
+    <!-- Transaction List Skeleton -->
+    <div class="skeleton-wrapper" id="txnSkeleton">
+      <div class="skeleton shimmer txn-skeleton-item"></div>
+      <div class="skeleton shimmer txn-skeleton-item"></div>
+      <div class="skeleton shimmer txn-skeleton-item"></div>
+    </div>
+
+    <!-- Real Transactions -->
+    <section class="transactions" id="transactionsSection" style="display:none;">
+      <div class="section-title">
+        <h3>Recent Transactions</h3>
+        <a href="#">See all</a>
+      </div>
+      <div id="transactionList"></div>
+      <div id="emptyTransactions" style="display:none;" class="empty-state">
+        <i class="fas fa-receipt"></i>
+        <p>No transactions yet</p>
+        <button class="btn-primary" onclick="fundAccount()">Add Money</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="send.html" class="nav-item"><i class="fas fa-paper-plane"></i><span>Send</span></a>
+    <a href="bills.html" class="nav-item"><i class="fas fa-file-invoice-dollar"></i><span>Pay</span></a>
+    <a href="#" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+  </nav>
+
+  <!-- Receipt Modal -->
+  <div id="receiptModal" class="modal">
+    <div class="modal-content receipt-modal">
+      <span class="close-receipt" onclick="closeReceipt()">&times;</span>
+      <div class="receipt-header">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h3>Transaction Receipt</h3>
+      </div>
+      <div class="receipt-body" id="receiptBody"></div>
+    </div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div id="qrModal" class="modal">
+    <div class="modal-content qr-modal">
+      <span class="close-qr" onclick="hideQR()">&times;</span>
+      <h3>My Payment QR</h3>
+      <div id="qrcode"></div>
+      <p>Show this code to receive money</p>
+    </div>
+  </div>
+
+  <script src="js/bankingService.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
